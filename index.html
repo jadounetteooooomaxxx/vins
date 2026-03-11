@@ -74,43 +74,13 @@ h1,h2{
 
 <script>
 const quizData = [
-  // Vin
-  {
-    question:"Quel est le nom de la partie arrondie du verre à vin ? 🍷",
-    options:["Bord","Ménisque","Col","Pied"],
-    answer:1
-  },
-  {
-    question:"Quel vin est le plus consommé dans le monde ? 🍇",
-    options:["Chardonnay","Cabernet Sauvignon","Merlot","Pinot Noir"],
-    answer:2
-  },
-  {
-    question:"Quel vin est le plus cher jamais vendu ? 💰",
-    options:["Château Lafite","Romanée-Conti","Château Margaux","Opus One"],
-    answer:1
-  },
-  {
-    question:"Quel est le terme qui décrit l’angle du vin dans le verre ? 🥂",
-    options:["Menisque","Niveau","Bascule","Colline"],
-    answer:0
-  },
-  // Paul Bocuse
-  {
-    question:"Quel pays est associé à Paul Bocuse ? 🇫🇷",
-    options:["Italie","France","Suisse","Belgique"],
-    answer:1
-  },
-  {
-    question:"Dans quelle ville Bocuse avait-il son fameux restaurant ? 🏰",
-    options:["Paris","Lyon","Marseille","Nice"],
-    answer:1
-  },
-  {
-    question:"En quelle année Paul Bocuse a-t-il reçu le titre de « Cuisinier du siècle » ? 🐀",
-    options:["1980","1990","1987","1975"],
-    answer:2
-  }
+  {question:"Quel est le nom de la partie arrondie du verre à vin ? 🍷", options:["Bord","Ménisque","Col","Pied"], answer:1},
+  {question:"Quel vin est le plus consommé dans le monde ? 🍇", options:["Chardonnay","Cabernet Sauvignon","Merlot","Pinot Noir"], answer:2},
+  {question:"Quel vin est le plus cher jamais vendu ? 💰", options:["Château Lafite","Romanée-Conti","Château Margaux","Opus One"], answer:1},
+  {question:"Quel est le terme qui décrit l’angle du vin dans le verre ? 🥂", options:["Menisque","Niveau","Bascule","Colline"], answer:0},
+  {question:"Quel pays est associé à Paul Bocuse ? 🇫🇷", options:["Italie","France","Suisse","Belgique"], answer:1},
+  {question:"Dans quelle ville Bocuse avait-il son fameux restaurant ? 🏰", options:["Paris","Lyon","Marseille","Nice"], answer:1},
+  {question:"En quelle année Paul Bocuse a-t-il reçu le titre de « Cuisinier du siècle » ? 🐀", options:["1980","1990","1987","1975"], answer:2}
 ];
 
 let current=0;
@@ -125,42 +95,44 @@ function startQuiz(){
 }
 
 function showQuestion(){
-  const q=quizData[current];
-  document.getElementById("question").textContent=q.question;
-  const optsDiv=document.getElementById("options");
-  optsDiv.innerHTML="";
+  const q = quizData[current];
+  document.getElementById("question").textContent = q.question;
+  const optsDiv = document.getElementById("options");
+  optsDiv.innerHTML = "";
   q.options.forEach((opt,i)=>{
-    const btn=document.createElement("button");
-    btn.textContent=opt;
+    const btn = document.createElement("button");
+    btn.textContent = opt;
     btn.className="option-btn";
-    btn.onclick=()=>checkAnswer(i);
+    btn.onclick = () => checkAnswer(i);
     optsDiv.appendChild(btn);
   });
   document.getElementById("message").textContent="";
 }
 
 function checkAnswer(i){
-  const q=quizData[current];
+  const q = quizData[current];
   if(i===q.answer){
-    document.getElementById("message").textContent="Banger ✅";
+    document.getElementById("message").textContent = "Banger ✅";
     score++;
+    // passe à la question suivante après un petit délai
+    setTimeout(()=>{
+      current++;
+      if(current<quizData.length){
+        showQuestion();
+      }else{
+        endQuiz();
+      }
+    },800);
   }else{
-    document.getElementById("message").textContent="Bouhouuu ❌";
+    document.getElementById("message").textContent = "Bouhouuu ❌, essaie encore";
+    // ne change pas current, reste sur la même question
   }
-  current++;
-  setTimeout(()=>{
-    if(current<quizData.length){
-      showQuestion();
-    }else{
-      endQuiz();
-    }
-  },800);
 }
 
 function endQuiz(){
   document.getElementById("quiz").style.display="none";
   document.getElementById("end").style.display="block";
-  document.getElementById("score").textContent=`Ton score: ${score}/${quizData.length} 🍷`;
+  document.getElementById("score").textContent = `Ton score: ${score}/${quizData.length} 🍷`;
 }
 
 function restartQuiz(){
