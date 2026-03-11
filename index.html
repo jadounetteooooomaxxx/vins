@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Quiz Pro du Vin & Bocuse</title>
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  text-align:center;
+  background: url('https://images.unsplash.com/photo-1522432881397-994018f3f842?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+  background-size: cover;
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  height:100vh;
+}
+button{
+  padding:15px 25px;
+  margin:10px;
+  font-size:20px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  transition:0.3s;
+}
+button:hover{
+  transform:scale(1.1);
+}
+#quiz, #end{
+  display:none;
+}
+h1,h2{
+  text-shadow: 2px 2px 5px black;
+}
+.option-btn{
+  display:block;
+  margin:10px auto;
+  min-width:200px;
+  background: rgba(0,0,0,0.6);
+  color:white;
+}
+#message{
+  font-size:24px;
+  margin-top:15px;
+  min-height:30px;
+  text-shadow: 2px 2px 5px black;
+}
+</style>
+</head>
+<body>
+
+<!-- Start Screen -->
+<div id="start">
+  <h1>🍷 Quiz Vin & Bocuse 🍷</h1>
+  <p>Prêt à prouver que tu es un vrai pro du vin ?</p>
+  <button onclick="startQuiz()">START</button>
+</div>
+
+<!-- Quiz Screen -->
+<div id="quiz">
+  <h2 id="question"></h2>
+  <div id="options"></div>
+  <div id="message"></div>
+</div>
+
+<!-- End Screen -->
+<div id="end">
+  <h1>🎉 Quiz terminé 🎉</h1>
+  <p id="score"></p>
+  <button onclick="restartQuiz()">RECOMMENCER 🔄</button>
+</div>
+
+<script>
+const quizData = [
+  // Vin
+  {
+    question:"Quel est le nom de la partie arrondie du verre à vin ? 🍷",
+    options:["Bord","Ménisque","Col","Pied"],
+    answer:1
+  },
+  {
+    question:"Quel vin est le plus consommé dans le monde ? 🍇",
+    options:["Chardonnay","Cabernet Sauvignon","Merlot","Pinot Noir"],
+    answer:2
+  },
+  {
+    question:"Quel vin est le plus cher jamais vendu ? 💰",
+    options:["Château Lafite","Romanée-Conti","Château Margaux","Opus One"],
+    answer:1
+  },
+  {
+    question:"Quel est le terme qui décrit l’angle du vin dans le verre ? 🥂",
+    options:["Menisque","Niveau","Bascule","Colline"],
+    answer:0
+  },
+  // Paul Bocuse
+  {
+    question:"Quel pays est associé à Paul Bocuse ? 🇫🇷",
+    options:["Italie","France","Suisse","Belgique"],
+    answer:1
+  },
+  {
+    question:"Dans quelle ville Bocuse avait-il son fameux restaurant ? 🏰",
+    options:["Paris","Lyon","Marseille","Nice"],
+    answer:1
+  },
+  {
+    question:"En quelle année Paul Bocuse a-t-il reçu le titre de « Cuisinier du siècle » ? 🐀",
+    options:["1980","1990","1987","1975"],
+    answer:2
+  }
+];
+
+let current=0;
+let score=0;
+
+function startQuiz(){
+  document.getElementById("start").style.display="none";
+  document.getElementById("quiz").style.display="block";
+  current=0;
+  score=0;
+  showQuestion();
+}
+
+function showQuestion(){
+  const q=quizData[current];
+  document.getElementById("question").textContent=q.question;
+  const optsDiv=document.getElementById("options");
+  optsDiv.innerHTML="";
+  q.options.forEach((opt,i)=>{
+    const btn=document.createElement("button");
+    btn.textContent=opt;
+    btn.className="option-btn";
+    btn.onclick=()=>checkAnswer(i);
+    optsDiv.appendChild(btn);
+  });
+  document.getElementById("message").textContent="";
+}
+
+function checkAnswer(i){
+  const q=quizData[current];
+  if(i===q.answer){
+    document.getElementById("message").textContent="Banger ✅";
+    score++;
+  }else{
+    document.getElementById("message").textContent="Bouhouuu ❌";
+  }
+  current++;
+  setTimeout(()=>{
+    if(current<quizData.length){
+      showQuestion();
+    }else{
+      endQuiz();
+    }
+  },800);
+}
+
+function endQuiz(){
+  document.getElementById("quiz").style.display="none";
+  document.getElementById("end").style.display="block";
+  document.getElementById("score").textContent=`Ton score: ${score}/${quizData.length} 🍷`;
+}
+
+function restartQuiz(){
+  document.getElementById("end").style.display="none";
+  document.getElementById("start").style.display="block";
+}
+</script>
+
+</body>
+</html>
